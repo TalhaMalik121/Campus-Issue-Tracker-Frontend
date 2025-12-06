@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Bell, Sun, Moon, LogOut, Settings, X } from "lucide-react";
+import { Search, Bell, Sun, Moon, LogOut, Settings, X } from "lucide-react"; // Removed 'Menu' import
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Topbar({ onSearch, onToggleTheme, isDark }) {

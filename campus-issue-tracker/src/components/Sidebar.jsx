@@ -7,8 +7,8 @@ function NavItem({ label, icon, onClick, active }) {
       onClick={onClick}
       className={`w-full rounded-xl p-3 flex items-center gap-3 transition-colors ${
         active
-          ? "bg-indigo-50 text-indigo-600 border-l-4 border-indigo-500 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border-indigo-400"
-          : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-gray-200"
+          ? "bg-indigo-50 text-indigo-600 border-l-4 border-indigo-500 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-400"
+          : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white"
       }`}
     >
       <span className="w-5 h-5">{icon}</span>
@@ -19,12 +19,12 @@ function NavItem({ label, icon, onClick, active }) {
 
 export default function Sidebar({ role, onNavigate, selected, closeSidebar }) {
   return (
-    <aside className="relative h-full w-72 bg-white border-r border-gray-100 flex flex-col gap-6 p-5 dark:bg-slate-950 dark:border-slate-800">
+    <aside className="relative h-full w-72 bg-white border-r border-gray-100 flex flex-col gap-6 p-5 dark:bg-slate-950 dark:border-slate-800 transition-colors">
 
       {/* MOBILE CLOSE BUTTON */}
       <button
         onClick={closeSidebar}
-        className="md:hidden absolute top-4 right-4 text-gray-700 dark:text-gray-300 text-base"
+        className="md:hidden absolute top-4 right-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 p-1 rounded-full text-base"
       >
         ✕
       </button>
@@ -37,7 +37,7 @@ export default function Sidebar({ role, onNavigate, selected, closeSidebar }) {
 
         <div>
           <h1 className="text-lg font-bold text-slate-900 dark:text-white">CampusTracker</h1>
-          <p className="text-xs text-gray-500 dark:text-gray-500">Admin Dashboard</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Admin Dashboard</p>
         </div>
       </div>
 

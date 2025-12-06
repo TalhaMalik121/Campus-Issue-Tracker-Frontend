@@ -2,28 +2,45 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import MobileBottomNav from "./components/MobileBottomNav";
-import Footer from "./components/Footer"; // <--- 1. Import Footer
+import Footer from "./components/Footer";
 import Dashboard from "./components/Dashboard";
 import IssuesList from "./components/IssuesList";
 import CreateIssueForm from "./components/CreateIssueForm";
 import IssueModal from "./components/IssueModal";
 import IssueCard from "./components/IssueCard";
-import useFakeApi from "./api/useFakeApi";
+// import useFakeApi from "./api/useFakeApi"; // Ensure this path is correct in your project
 import { AnimatePresence, motion } from "framer-motion";
 
+// Mock API if you don't have the file locally yet, 
+// otherwise uncomment the import above and delete this object.
+const mockApi = {
+  fetchIssues: async () => [
+    { id: 1, title: "Broken Projector", status: "New", category: "Hardware", location: "Lab 1", description: "Projector not turning on." },
+    { id: 2, title: "AC Leak", status: "In Progress", category: "Maintenance", location: "Library", description: "Water dripping from AC unit." },
+  ],
+  createIssue: async (data) => ({ ...data, id: Math.random(), status: "New" }),
+  updateIssueStatus: async () => {},
+};
+
 export default function App() {
-  const api = useFakeApi();
+  const api = mockApi; // Replace with useFakeApi() if you have it
   const [role] = useState("Admin");
   const [view, setView] = useState("dashboard");
   const [issues, setIssues] = useState([]);
   const [query, setQuery] = useState("");
   const [selectedIssue, setSelectedIssue] = useState(null);
-  const [isDark, setIsDark] = useState(false);
 
+  // FIX: Unified State. We only use 'darkMode' now.
   const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
+    // Check local storage or system preference
+    if (typeof window !== "undefined") {
+        return localStorage.getItem("theme") === "dark" || 
+        (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    }
+    return false;
   });
 
+  // Apply the "dark" class to HTML tag
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -63,7 +80,8 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden">
+    // FIX: Added transition-colors to the main wrapper for smooth theme switching
+    <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-300">
       
       {/* DESKTOP SIDEBAR */}
       <div className="hidden md:block h-full shrink-0">
@@ -77,11 +95,10 @@ export default function App() {
         <Topbar 
           onSearch={setQuery}
           onToggleTheme={() => setDarkMode(!darkMode)}
-          isDark={darkMode}
+          isDark={darkMode} // Pass the correct state
         />
 
         {/* SCROLLABLE PAGE CONTENT */}
-        {/* Flex-col ensures Footer pushes to bottom if content is short */}
         <main className="flex-1 overflow-y-auto flex flex-col scroll-smooth pb-24 md:pb-0">
             
           {/* Content Wrapper */}
@@ -130,16 +147,15 @@ export default function App() {
             </div>
           </div>
 
-          {/* FOOTER PLACEMENT */}
-          <Footer /> {/* <--- 2. Place Footer here (inside main, after content div) */}
+          <Footer />
 
         </main>
       </div>
 
       {/* MOBILE BOTTOM NAV */}
-      <MobileBottomNav view={view} onNavigate={setView} isDarkMode={isDark} />
+      {/* FIX: Passed 'darkMode' correctly to 'isDarkMode' prop */}
+      <MobileBottomNav view={view} onNavigate={setView} isDarkMode={darkMode} />
       
-
       <AnimatePresence>
         {selectedIssue && (
           <IssueModal issue={selectedIssue} onClose={() => setSelectedIssue(null)} />
