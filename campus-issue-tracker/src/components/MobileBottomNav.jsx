@@ -4,12 +4,10 @@ import { Home, List, Plus, CheckCircle, User } from "lucide-react";
 export default function MobileBottomNav({ view, onNavigate, isDarkMode }) {
   
   useEffect(() => {
-    // Force class on HTML element to ensure Tailwind knows it's dark mode
     const root = window.document.documentElement;
     if (isDarkMode) root.classList.add('dark');
     else root.classList.remove('dark');
 
-    // Force Browser UI color
     let metaThemeColor = document.querySelector("meta[name=theme-color]");
     if (!metaThemeColor) {
       metaThemeColor = document.createElement("meta");
@@ -21,9 +19,9 @@ export default function MobileBottomNav({ view, onNavigate, isDarkMode }) {
 
   const navItems = [
     { id: "dashboard", icon: Home, label: "Home" },
-    { id: "issues", icon: List, label: "Issues" },
+    { id: "issues", icon: List, label: "In-Progress" },
     { id: "create", icon: Plus, label: "Create", isFab: true },
-    { id: "completed", icon: CheckCircle, label: "Done" },
+    { id: "resolved", icon: CheckCircle, label: "Resolved" }, // Changed from Completed/Done
     { id: "profile", icon: User, label: "Profile" },
   ];
 
@@ -41,7 +39,7 @@ export default function MobileBottomNav({ view, onNavigate, isDarkMode }) {
                 <button
                   onClick={() => onNavigate(item.id)}
                   className="relative -top-6 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-300 dark:shadow-indigo-900/50 hover:scale-105 transition-transform
-                             p-[clamp(12px,3.5vw,18px)]" 
+                             p-[clamp(12px,3.5vw,18px)] border-none" 
                 >
                   <IconComponent className="w-[clamp(28px,7vw,36px)] h-[clamp(28px,7vw,36px)]" />
                 </button>
@@ -53,10 +51,10 @@ export default function MobileBottomNav({ view, onNavigate, isDarkMode }) {
             <div key={item.id} className="flex justify-center">
               <button
                 onClick={() => onNavigate(item.id)}
-                className={`flex flex-col items-center gap-1 transition-colors w-full py-1 ${
+                className={`flex flex-col items-center gap-1 transition-colors w-full py-1 bg-transparent border-none ${
                   isActive
                     ? "text-indigo-600 dark:text-indigo-400"
-                    : "text-slate-500 dark:text-slate-400" // HIGH CONTRAST FIX
+                    : "text-slate-500 dark:text-slate-400"
                 }`}
               >
                 <IconComponent className="w-[clamp(22px,6vw,28px)] h-[clamp(22px,6vw,28px)]" />
