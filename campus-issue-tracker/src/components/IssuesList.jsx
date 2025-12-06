@@ -1,21 +1,32 @@
 import React from "react";
 import IssueCard from "./IssueCard";
+import { Filter } from "lucide-react";
 
 export default function IssuesList({ issues, onOpenIssue, onUpdateStatus }) {
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">All Issues</h2>
-      <div className="grid grid-cols-3 gap-4">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold tracking-tight">All Issues</h2>
+        <button className="flex items-center gap-2 px-4 py-2 border rounded-xl hover:bg-gray-50 dark:border-slate-700 dark:hover:bg-slate-800 transition">
+            <Filter size={16} /> <span className="text-sm font-medium">Filter</span>
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {issues.map((issue) => (
-          <div key={issue.id} className="col-span-1">
+          <div key={issue.id} className="flex flex-col gap-3 group">
             <IssueCard issue={issue} onOpen={() => onOpenIssue(issue)} />
-            <div className="mt-2 flex gap-2">
-              <select defaultValue={issue.status} onChange={(e) => onUpdateStatus(issue.id, e.target.value)} className="mt-2 w-full rounded-lg p-2 border">
-                <option>New</option>
-                <option>In Progress</option>
-                <option>Completed</option>
-              </select>
-            </div>
+            
+            {/* Simple Status dropdown underneath */}
+            <select
+              defaultValue={issue.status}
+              onChange={(e) => onUpdateStatus(issue.id, e.target.value)}
+              className="w-full text-sm p-2 rounded-lg border border-gray-200 bg-gray-50 hover:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition dark:bg-slate-800 dark:border-slate-700 dark:text-gray-300"
+            >
+              <option value="New">New</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
           </div>
         ))}
       </div>
