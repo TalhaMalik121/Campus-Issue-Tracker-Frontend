@@ -5,7 +5,23 @@ export default function IssueCard({ issue, onOpen }) {
     New: "bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-300 dark:border-red-900/30",
     "In Progress": "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-900/30",
     Completed: "bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-900/30",
+    Resolved: "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-900/30",
   };
+
+  // Helper to get image source safely
+  const getAttachmentSrc = (attachment) => {
+    if (!attachment) return null;
+    // If it's a file object (local preview)
+    if (attachment instanceof File) return URL.createObjectURL(attachment);
+    // If it's from backend, it has a 'path' property
+    if (attachment.path) return attachment.path;
+    // Fallback if it's just a string
+    return attachment;
+  };
+
+  const imageSrc = issue.attachments && issue.attachments.length > 0 
+    ? getAttachmentSrc(issue.attachments[0]) 
+    : null;
 
   return (
     <motion.div
@@ -15,9 +31,9 @@ export default function IssueCard({ issue, onOpen }) {
     >
       {/* Image Section */}
       <div className="h-40 overflow-hidden bg-gray-100 dark:bg-slate-700 relative">
-        {issue.attachments && issue.attachments.length > 0 ? (
+        {imageSrc ? (
           <img
-            src={URL.createObjectURL(issue.attachments[0])}
+            src={imageSrc}
             alt={issue.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />

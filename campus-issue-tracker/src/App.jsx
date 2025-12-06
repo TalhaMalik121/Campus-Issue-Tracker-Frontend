@@ -9,21 +9,9 @@ import IssueModal from "./components/IssueModal";
 import IssueCard from "./components/IssueCard";
 import Dashboard from "./components/Dashboard";
 import { AnimatePresence, motion } from "framer-motion";
-
-// Mock API 
-const mockApi = {
-  fetchIssues: async () => [
-    { id: 1, title: "Broken Projector", status: "New", category: "Hardware", location: "Lab 1", description: "Projector not turning on." },
-    { id: 2, title: "AC Leak", status: "In Progress", category: "Maintenance", location: "Library", description: "Water dripping from AC unit." },
-    { id: 3, title: "Wifi Down", status: "Resolved", category: "Network", location: "Cafeteria", description: "Fixed router restart." }, 
-    { id: 4, title: "Broken Chair", status: "New", category: "Furniture", location: "Classroom 3B", description: "Leg is loose." },
-  ],
-  createIssue: async (data) => ({ ...data, id: Math.random(), status: "New" }),
-  updateIssueStatus: async () => {},
-};
+import { api } from "./api/api"; // IMPORT THE REAL API
 
 export default function App() {
-  const api = mockApi;
   const [role] = useState("Admin");
   const [view, setView] = useState("dashboard");
   const [issues, setIssues] = useState([]);
@@ -48,10 +36,15 @@ export default function App() {
     }
   }, [darkMode]);
 
+  // Load issues from Backend on mount
   useEffect(() => {
     (async () => {
-      const res = await api.fetchIssues();
-      setIssues(res);
+      try {
+        const res = await api.fetchIssues();
+        setIssues(res);
+      } catch (err) {
+        console.error("Failed to load issues:", err);
+      }
     })();
   }, []);
 
@@ -66,15 +59,25 @@ export default function App() {
   }
 
   async function handleCreate(payload) {
-    const created = await api.createIssue(payload);
-    setIssues((s) => [created, ...s]);
-    setView("dashboard"); 
+    try {
+      const created = await api.createIssue(payload);
+      // Prepend the new issue (created is the full object from backend)
+      setIssues((s) => [created, ...s]);
+      setView("dashboard"); 
+    } catch (err) {
+      console.error("Failed to create issue:", err);
+      alert("Error creating issue.");
+    }
   }
 
   async function handleUpdateStatus(id, status) {
-    if (role !== "Admin") return; 
-    await api.updateIssueStatus(id, status);
-    setIssues((s) => s.map((i) => (i.id === id ? { ...i, status } : i)));
+    // if (role !== "Admin") return; // Enable if you want strict role checks
+    try {
+      await api.updateIssueStatus(id, status);
+      setIssues((s) => s.map((i) => (i.id === id ? { ...i, status } : i)));
+    } catch (err) {
+      console.error("Failed to update status:", err);
+    }
   }
 
   const allFiltered = getSearchedIssues();
