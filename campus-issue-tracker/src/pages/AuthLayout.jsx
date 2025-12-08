@@ -19,7 +19,7 @@ export default function AuthLayout({ children, formType, titleOverride, subtitle
     const Icon = formType === 'login' ? Shield : User;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-200 dark:bg-gray-900 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-gray-950 p-4">
             <motion.div 
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}

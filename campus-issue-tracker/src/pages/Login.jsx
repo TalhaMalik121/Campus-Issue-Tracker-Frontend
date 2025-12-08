@@ -16,7 +16,7 @@ const InputGroup = ({ name, type, placeholder, icon: Icon, formData, handleChang
             onChange={handleChange} 
             required 
             value={formData[name]} 
-            className="w-full pl-12 pr-4 py-3.5 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition duration-200 shadow-inner"
+            className="w-full pl-12 pr-4 py-3.5 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500  focus:border-indigo-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:focus:bg-slate-700 dark:placeholder-gray-400 transition duration-200 shadow-inner"
         />
     </div>
 );
