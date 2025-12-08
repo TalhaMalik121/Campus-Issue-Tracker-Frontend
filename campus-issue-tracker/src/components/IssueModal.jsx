@@ -1,9 +1,80 @@
+// import React from "react";
+// import { motion } from "framer-motion";
+// import { X } from "lucide-react";
+
+// export default function IssueModal({ issue, onClose }) {
+//   if (!issue) return null;
+
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+//       <motion.div 
+//         initial={{ opacity: 0, scale: 0.98 }} 
+//         animate={{ opacity: 1, scale: 1 }} 
+//         exit={{ opacity: 0, scale: 0.98 }} 
+//         className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 p-6 transition-colors max-h-[90vh] overflow-y-auto"
+//       >
+//         {/* Header */}
+//         <div className="flex justify-between items-start mb-6">
+//           <div>
+//             <h3 className="text-xl font-semibold text-slate-900 dark:text-white">{issue.title}</h3>
+//             <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{issue.location} • {issue.category}</div>
+//           </div>
+//           <button onClick={onClose} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-slate-800"><X /></button>
+//         </div>
+
+//         {/* --- NEW: IMAGE VIEWER SECTION --- */}
+//         {issue.attachments && issue.attachments.length > 0 && (
+//             <div className="mb-6 rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-950 border border-gray-100 dark:border-slate-800">
+//                 <img 
+//                     /* Creates a preview URL from the File object */
+//                     src={URL.createObjectURL(issue.attachments[0])} 
+//                     alt={issue.title} 
+//                     className="w-full h-auto max-h-[400px] object-contain mx-auto"
+//                 />
+//             </div>
+//         )}
+
+//         {/* Description */}
+//         <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+//             {issue.description}
+//         </div>
+
+//         {/* Status Badge */}
+//         <div className="mt-6 flex gap-3 items-center">
+//           <div className="text-sm text-gray-500 dark:text-gray-400">Status:</div>
+//           <div className="px-3 py-1 bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300 rounded-full text-sm font-medium">{issue.status}</div>
+//         </div>
+
+//         {/* Comments Section */}
+//         <div className="mt-6 border-t border-gray-100 dark:border-slate-800 pt-4">
+//           <h4 className="font-medium text-slate-900 dark:text-white">Comments</h4>
+//           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">No comments yet — integrate comments API to enable discussion.</p>
+//         </div>
+//       </motion.div>
+//     </div>
+//   );
+// }
 import React from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
 export default function IssueModal({ issue, onClose }) {
   if (!issue) return null;
+
+  // 🔑 HELPER FUNCTION: Safely determine the image source
+  const getAttachmentSrc = (attachment) => {
+    if (!attachment) return null;
+    // 1. If it's a raw File object (e.g., essentially a preview before upload)
+    if (attachment instanceof File) {
+        return URL.createObjectURL(attachment);
+    }
+    // 2. If it's an object from the backend with a 'path' property
+    if (attachment.path) {
+        return attachment.path;
+    }
+    // 3. Fallback if it's already a direct string URL
+    return attachment;
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
@@ -22,12 +93,12 @@ export default function IssueModal({ issue, onClose }) {
           <button onClick={onClose} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-slate-800"><X /></button>
         </div>
 
-        {/* --- NEW: IMAGE VIEWER SECTION --- */}
+        {/* --- FIXED IMAGE VIEWER SECTION --- */}
         {issue.attachments && issue.attachments.length > 0 && (
             <div className="mb-6 rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-950 border border-gray-100 dark:border-slate-800">
                 <img 
-                    /* Creates a preview URL from the File object */
-                    src={URL.createObjectURL(issue.attachments[0])} 
+                    /* 🔑 UPDATED: Use the helper function instead of direct createObjectURL */
+                    src={getAttachmentSrc(issue.attachments[0])} 
                     alt={issue.title} 
                     className="w-full h-auto max-h-[400px] object-contain mx-auto"
                 />
