@@ -45,7 +45,7 @@ export const api = {
     fetchIssues: async () => {
         // GET requests pass the config as the second argument
         const response = await axios.get(`${API_URL}/issues`, getAuthHeaders());
-        
+
         if (response.status !== 200) throw new Error("Server error");
         return response.data;
     },
@@ -58,7 +58,7 @@ export const api = {
         formData.append("category", issueData.category);
         formData.append("location", issueData.location);
         formData.append("created_by", issueData.created_by || 'Anonymous');
-        
+
         // Append files
         if (issueData.attachments && issueData.attachments.length > 0) {
             Array.from(issueData.attachments).forEach(file => {
@@ -66,17 +66,17 @@ export const api = {
                 formData.append("attachments", file);
             });
         }
-        
+
         // When sending FormData, you DO NOT manually set Content-Type.
         // Axios handles it automatically as 'multipart/form-data'.
-        
+
         const config = getAuthHeaders();
         // Remove Content-Type if it was set in getAuthHeaders() for JSON
-        delete config.headers['Content-Type']; 
+        delete config.headers['Content-Type'];
 
         const response = await axios.post(
-            `${API_URL}/issues`, 
-            formData, 
+            `${API_URL}/issues`,
+            formData,
             config
         );
 
@@ -88,17 +88,49 @@ export const api = {
     updateIssueStatus: async (id, status) => {
         // PATCH requests send data first, then headers/config
         const response = await axios.patch(
-            `${API_URL}/issues/${id}/status`, 
+            `${API_URL}/issues/${id}/status`,
             { status }, // The data to send
             {
-                headers: { 
+                headers: {
                     ...getAuthHeaders().headers,
-                    'Content-Type': 'application/json' 
+                    'Content-Type': 'application/json'
                 }
             }
         );
-        
+
         if (response.status !== 200) throw new Error("Failed to update status");
         return response.data;
     },
+    // 4. COMMENTS & INTERACTION
+    addComment: async (issueId, text) => {
+        const response = await axios.post(`${API_URL}/issues/${issueId}/comments`, { text }, getAuthHeaders());
+        return response.data;
+    },
+
+    addReply: async (issueId, commentId, text) => {
+        const response = await axios.post(`${API_URL}/issues/${issueId}/comments/${commentId}/replies`, { text }, getAuthHeaders());
+        return response.data;
+    },
+
+    toggleLike: async (issueId, commentId) => {
+        const response = await axios.patch(`${API_URL}/issues/${issueId}/comments/${commentId}/like`, {}, getAuthHeaders());
+        return response.data;
+    },
+
+    toggleIssueLike: async (issueId) => {
+        const response = await axios.patch(`${API_URL}/issues/${issueId}/like`, {}, getAuthHeaders());
+        return response.data;
+    }
+};
+
+// --- Admin Endpoints ---
+export const adminApi = {
+    fetchUsers: async () => {
+        const response = await axios.get(`${API_URL}/users`, getAuthHeaders());
+        return response.data;
+    },
+    toggleBlockUser: async (id) => {
+        const response = await axios.patch(`${API_URL}/users/${id}/block`, {}, getAuthHeaders());
+        return response.data;
+    }
 };

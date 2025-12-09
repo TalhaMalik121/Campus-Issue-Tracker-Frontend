@@ -1,53 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 1. Global Reset */
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
-  
-  /* Enables CSS variables for colors */
   color-scheme: light dark;
 }
 
-/* 2. Body Backgrounds controlled by Tailwind classes in App.jsx, 
-   but we set defaults here to prevent flashing */
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  @apply bg-slate-50 text-slate-900;
+  @apply bg-surface-50 text-surface-900 selection:bg-primary-500/30 selection:text-primary-900;
 }
 
-/* Dark Mode Override */
 .dark body {
-  @apply bg-slate-950 text-slate-100;
+  @apply bg-surface-950 text-surface-100 selection:bg-primary-400/30 selection:text-primary-100;
 }
 
-/* 3. Custom Scrollbar */
+/* Glassmorphism Utilities */
+.glass {
+  @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-lg;
+}
+
+.glass-dark {
+  @apply dark:bg-slate-900/70 dark:backdrop-blur-lg dark:border-white/5 dark:shadow-xl;
+}
+
+.glass-panel {
+    @apply glass glass-dark rounded-2xl transition-all duration-300;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  @apply bg-surface-300 dark:bg-surface-700 rounded-full hover:bg-surface-400 dark:hover:bg-surface-600 transition-colors;
 }
 
-/* Dark mode scrollbar */
-.dark ::-webkit-scrollbar-thumb {
-  background: #475569;
+/* Typography Enhancements */
+h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
 }
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
-}
-
-/* REMOVED: All the generic button {} and a {} styles that were breaking your theme */

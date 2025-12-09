@@ -1,739 +1,59 @@
-// // import React, { useState, useEffect, useCallback } from "react";
-// // import Sidebar from "./components/Sidebar";
-// // import Topbar from "./components/Topbar";
-// // import MobileBottomNav from "./components/MobileBottomNav";
-// // import Footer from "./components/Footer";
-// // import IssuesList from "./components/IssuesList";
-// // import CreateIssueForm from "./components/CreateIssueForm";
-// // import IssueModal from "./components/IssueModal";
-// // import IssueCard from "./components/IssueCard";
-// // import Dashboard from "./components/Dashboard";
-// // import Login from "./pages/Login"; // Import the pages from the previous step
-// // import Signup from "./pages/Signup"; // Import the pages from the previous step
-// // import { AnimatePresence, motion } from "framer-motion";
-// // import { api,authApi } from "./api/api"; 
-// // import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';// IMPORT THE REAL API (Needs update for auth headers)
-
-// // // --- Define the Authenticated App Component ---
-// // // 🔑 UPDATED: Added userName and NEW userEmail prop
-// // function AuthenticatedApp({ role, setRole, issues, setIssues, query, setQuery, view, setView, darkMode, setDarkMode, selectedIssue, setSelectedIssue, handleCreate, handleUpdateStatus, allFiltered,handleLogout, userName, userEmail }) {
-// //     
-// //     return (
-// //         <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-300">
-// //             
-// //             <div className="hidden md:block h-full shrink-0">
-// //                 {/* 🔑 PASSING userName to Sidebar */}
-// //                 <Sidebar role={role} onNavigate={setView} selected={view} userName={userName} />
-// //             </div>
-
-// //             <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-// //                 <Topbar 
-// //                     // 🔑 PASSING userName and NEW userEmail to Topbar
-// //                     userName={userName}
-// //                     userEmail={userEmail}
-// //                     onSearch={setQuery}
-// //                     onToggleTheme={() => setDarkMode(!darkMode)}
-// //                     isDark={darkMode}
-// //                     setRole={setRole}
-// //                     onLogout={handleLogout} 
-// //                 />
-
-// //                 <main className="flex-1 overflow-y-auto flex flex-col scroll-smooth pb-24 md:pb-0">
-// //                     <div className="flex-1 p-4 md:p-8">
-// //                         <div className="max-w-7xl mx-auto w-full">
-// //                             <AnimatePresence mode="wait">
-// //                             
-// //                             {/* DASHBOARD */}
-// //                             {view === "dashboard" && (
-// //                                 <motion.div key="dashboard" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-// //                                     <Dashboard issues={allFiltered} />
-// //                                     
-// //                                     <div className="mt-8 mb-6">
-// //                                         <h2 className="text-2xl font-bold tracking-tight">New Issues</h2>
-// //                                         <p className="text-gray-500 dark:text-gray-400">Issues that need to be reviewed.</p>
-// //                                     </div>
-// //                                     
-// //                                     <IssuesList 
-// //                                         issues={allFiltered.filter(i => i.status === "New")} 
-// //                                         onOpenIssue={setSelectedIssue} 
-// //                                         onUpdateStatus={handleUpdateStatus} 
-// //                                     />
-// //                                 </motion.div>
-// //                             )}
-
-// //                             {/* IN PROGRESS */}
-// //                             {view === "issues" && (
-// //                                 <motion.div key="issues" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-// //                                     <div className="mb-6">
-// //                                         <h2 className="text-3xl font-bold tracking-tight">In Progress</h2>
-// //                                         <p className="text-gray-500 dark:text-gray-400">Issues currently being worked on.</p>
-// //                                     </div>
-// //                                     
-// //                                     <IssuesList 
-// //                                         issues={allFiltered.filter(i => i.status === "In Progress")} 
-// //                                         onOpenIssue={setSelectedIssue} 
-// //                                         onUpdateStatus={handleUpdateStatus} 
-// //                                     />
-// //                                 </motion.div>
-// //                             )}
-
-// //                             {/* CREATE */}
-// //                             {view === "create" && (
-// //                                 <motion.div key="create" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-// //                                     <CreateIssueForm onCreate={handleCreate} />
-// //                                 </motion.div>
-// //                             )}
-
-// //                             {/* RESOLVED */}
-// //                             {view === "resolved" && (
-// //                                 <motion.div key="resolved" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-// //                                 <div className="space-y-6">
-// //                                     <h2 className="text-3xl font-bold tracking-tight">Resolved Issues</h2>
-// //                                     <p className="text-gray-500 dark:text-gray-400">History of completed tasks.</p>
-// //                                     
-// //                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-// //                                         {allFiltered.filter((i) => i.status === "Resolved").length > 0 ? (
-// //                                             allFiltered.filter((i) => i.status === "Resolved").map((issue) => (
-// //                                                 <IssueCard key={issue.id} issue={issue} onOpen={() => setSelectedIssue(issue)} />
-// //                                             ))
-// //                                         ) : (
-// //                                             <p className="col-span-full text-gray-500 text-center py-10">No resolved issues found.</p>
-// //                                         )}
-// //                                     </div>
-// //                                 </div>
-// //                                 </motion.div>
-// //                             )}
-// //                             </AnimatePresence>
-// //                         </div>
-// //                     </div>
-
-// //                     <Footer />
-// //                 </main>
-// //             </div>
-
-// //             <MobileBottomNav view={view} onNavigate={setView} isDarkMode={darkMode} />
-// //             
-// //             <AnimatePresence>
-// //                 {selectedIssue && (
-// //                     <IssueModal issue={selectedIssue} onClose={() => setSelectedIssue(null)} />
-// //                 )}
-// //             </AnimatePresence>
-// //         </div>
-// //     );
-// // }
-
-// // // --- The Root App Component with Router and Auth Logic ---
-// // export default function App() {
-// //     const [isLoggedIn, setIsLoggedIn] = useState(false);
-// //     const [role, setRole] = useState("Guest");
-// //     // 🔑 State for name
-// //     const [userName, setUserName] = useState(null); 
-// //     // 🔑 NEW STATE: To store the logged-in user's email
-// //     const [userEmail, setUserEmail] = useState(null);
-// //     const [view, setView] = useState("dashboard");
-// //     const [issues, setIssues] = useState([]);
-// //     const [query, setQuery] = useState("");
-// //     const [selectedIssue, setSelectedIssue] = useState(null);
-// //     const navigate = useNavigate(); 
-
-
-// //     const handleLogout = () => {
-// //     authApi.logout(); 
-// //     setIsLoggedIn(false);
-// //     setRole("Guest");
-// //     // 🔑 CLEAR name and email on logout
-// //     setUserName(null); 
-// //     setUserEmail(null); 
-// //     navigate('/login'); 
-// //     };
-
-// //     const [darkMode, setDarkMode] = useState(() => {
-// //         if (typeof window !== "undefined") {
-// //             return localStorage.getItem("theme") === "dark" || 
-// //             (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-// //         }
-// //         return false;
-// //     });
-
-// //     // --- Dark Mode Logic (Keep as is) ---
-// //     useEffect(() => {
-// //         if (darkMode) {
-// //             document.documentElement.classList.add("dark");
-// //             localStorage.setItem("theme", "dark");
-// //         } else {
-// //             document.documentElement.classList.remove("dark");
-// //             localStorage.setItem("theme", "light");
-// //         }
-// //     }, [darkMode]);
-
-// //     // --- AUTH CHECK: Check for Token on Mount ---
-// //     useEffect(() => {
-// //         const token = localStorage.getItem('token');
-// //         const userData = localStorage.getItem('user');
-// //         
-// //         if (token && userData) {
-// //             setIsLoggedIn(true);
-// //             const user = JSON.parse(userData);
-// //             
-// //             setRole(user.role || "Admin"); 
-// //             setUserName(user.name); 
-// //             // 🔑 UPDATED: Set the user's email from localStorage
-// //             setUserEmail(user.email);
-// //         } else {
-// //             setIsLoggedIn(false);
-// //             setRole("Guest");
-// //             setUserName(null); 
-// //             // 🔑 Clear email if no token
-// //             setUserEmail(null); 
-// //             // Automatically redirect to login if no token is found on the root path
-// //             if (window.location.pathname === '/') {
-// //                 navigate('/login');
-// //             }
-// //         }
-// //     }, [navigate]);
-// //     
-// //     // --- Data Loading Logic (Keep as is) ---
-// //     const fetchAllIssues = useCallback(async () => {
-// //         if (!isLoggedIn) return;
-// //         try {
-// //             // Note: api.fetchIssues must be updated to include the Authorization header!
-// //             const res = await api.fetchIssues(); 
-// //             setIssues(res);
-// //         } catch (err) {
-// //             console.error("Failed to load issues:", err);
-// //             // Handle 401 Unauthorized errors here (e.g., localStorage.clear(), navigate('/login'))
-// //         }
-// //     }, [isLoggedIn]);
-
-// //     useEffect(() => {
-// //         fetchAllIssues();
-// //     }, [fetchAllIssues]);
-
-
-// //     // --- CRUD Handlers (Keep as is, but ensure API uses token) ---
-// //     const handleCreate = useCallback(async (payload) => {
-// //         try {
-// //             // Note: api.createIssue must be updated to include the Authorization header!
-// //             const created = await api.createIssue(payload); 
-// //             setIssues((s) => [created, ...s]);
-// //             setView("dashboard"); 
-// //         } catch (err) {
-// //             console.error("Failed to create issue:", err);
-// //             alert("Error creating issue.");
-// //         }
-// //     }, []);
-
-// //     const handleUpdateStatus = useCallback(async (id, status) => {
-// //         // if (role !== "Admin") return; 
-// //         try {
-// //             // Note: api.updateIssueStatus must be updated to include the Authorization header!
-// //             await api.updateIssueStatus(id, status); 
-// //             setIssues((s) => s.map((i) => (i.id === id ? { ...i, status } : i)));
-// //         } catch (err) {
-// //             console.error("Failed to update status:", err);
-// //         }
-// //     }, []);
-
-// //     // --- Filter Logic (Keep as is) ---
-// //     const getSearchedIssues = useCallback(() => {
-// //         if (!query) return issues;
-// //         return issues.filter((i) =>
-// //             [i.title, i.description, i.location, i.category]
-// //                 .join(" ")
-// //                 .toLowerCase()
-// //                 .includes(query.toLowerCase())
-// //         );
-// //     }, [query, issues]);
-
-// //     const allFiltered = getSearchedIssues();
-
-// //     // --- Render Logic ---
-// //     if (!isLoggedIn) {
-// //         // Display Login/Signup routes if not logged in
-// //         return (
-// //             <div className="h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-// //                 <Routes>
-// //                     <Route path="/signup" element={<Signup />} />
-// //                     <Route path="/login" element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />} />
-// //                     {/* Default redirect to login for any other unauthorized path */}
-// //                     <Route path="*" element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />} /> 
-// //                 </Routes>
-// //             </div>
-// //         );
-// //     }
-// //     
-// //     // Display the main app structure if logged in
-// //     return (
-// //         <Routes>
-// //             <Route path="/" element={
-// //                 <AuthenticatedApp
-// //                     role={role} setRole={setRole}
-// //                     // 🔑 PASSING user name and email to AuthenticatedApp
-// //                     userName={userName} 
-// //                     userEmail={userEmail}
-// //                     issues={issues} setIssues={setIssues}
-// //                     query={query} setQuery={setQuery}
-// //                     view={view} setView={setView}
-// //                     darkMode={darkMode} setDarkMode={setDarkMode}
-// //                     selectedIssue={selectedIssue} setSelectedIssue={setSelectedIssue}
-// //                     handleCreate={handleCreate} handleUpdateStatus={handleUpdateStatus}
-// //                     allFiltered={allFiltered}
-// //                     handleLogout={handleLogout}
-// //                 />
-// //             } />
-// //             {/* Catch any route that is not '/' and redirect */}
-// //             <Route path="*" element={<Navigate to="/" replace />} /> 
-// //         </Routes>
-// //     );
-// // }
-// import React, { useState, useEffect, useCallback } from "react";
-// import Sidebar from "./components/Sidebar";
-// import Topbar from "./components/Topbar";
-// import MobileBottomNav from "./components/MobileBottomNav";
-// import Footer from "./components/Footer";
-// import IssuesList from "./components/IssuesList";
-// import CreateIssueForm from "./components/CreateIssueForm";
-// import IssueModal from "./components/IssueModal";
-// import IssueCard from "./components/IssueCard";
-// import Dashboard from "./components/Dashboard";
-// import Login from "./pages/Login"; // Import the pages from the previous step
-// import Signup from "./pages/Signup"; // Import the pages from the previous step
-// import { AnimatePresence, motion } from "framer-motion";
-// import { api,authApi } from "./api/api"; 
-// import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';// IMPORT THE REAL API (Needs update for auth headers)
-
-// // --- Define the Authenticated App Component ---
-// // 🔑 UPDATED: Added userName and NEW userEmail prop
-// function AuthenticatedApp({ role, setRole, issues, setIssues, query, setQuery, view, setView, darkMode, setDarkMode, selectedIssue, setSelectedIssue, handleCreate, handleUpdateStatus, allFiltered,handleLogout, userName, userEmail }) {
-//     
-//     return (
-//         <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-300">
-//             
-//             <div className="hidden md:block h-full shrink-0">
-//                 {/* 🔑 PASSING userName to Sidebar */}
-//                 <Sidebar role={role} onNavigate={setView} selected={view} userName={userName} />
-//             </div>
-
-//             <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-//                 <Topbar 
-//                     // 🔑 PASSING userName and NEW userEmail to Topbar
-//                     userName={userName}
-//                     userEmail={userEmail}
-//                     onSearch={setQuery}
-//                     onToggleTheme={() => setDarkMode(!darkMode)}
-//                     isDark={darkMode}
-//                     setRole={setRole}
-//                     onLogout={handleLogout} 
-//                 />
-
-//                 <main className="flex-1 overflow-y-auto flex flex-col scroll-smooth pb-24 md:pb-0">
-//                     <div className="flex-1 p-4 md:p-8">
-//                         <div className="max-w-7xl mx-auto w-full">
-//                             <AnimatePresence mode="wait">
-//                             
-//                             {/* DASHBOARD */}
-//                             {view === "dashboard" && (
-//                                 <motion.div key="dashboard" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-//                                     <Dashboard issues={allFiltered} />
-//                                     
-//                                     <div className="mt-8 mb-6">
-//                                         <h2 className="text-2xl font-bold tracking-tight">New Issues</h2>
-//                                         <p className="text-gray-500 dark:text-gray-400">Issues that need to be reviewed.</p>
-//                                     </div>
-//                                     
-//                                     <IssuesList 
-//                                         issues={allFiltered.filter(i => i.status === "New")} 
-//                                         onOpenIssue={setSelectedIssue} 
-//                                         onUpdateStatus={handleUpdateStatus} 
-//                                         // 🔑 PASS THE USER'S ROLE
-//                                         userRole={role}
-//                                     />
-//                                 </motion.div>
-//                             )}
-
-//                             {/* IN PROGRESS */}
-//                             {view === "issues" && (
-//                                 <motion.div key="issues" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-//                                     <div className="mb-6">
-//                                         <h2 className="text-3xl font-bold tracking-tight">In Progress</h2>
-//                                         <p className="text-gray-500 dark:text-gray-400">Issues currently being worked on.</p>
-//                                     </div>
-//                                     
-//                                     <IssuesList 
-//                                         issues={allFiltered.filter(i => i.status === "In Progress")} 
-//                                         onOpenIssue={setSelectedIssue} 
-//                                         onUpdateStatus={handleUpdateStatus} 
-//                                         // 🔑 PASS THE USER'S ROLE
-//                                         userRole={role}
-//                                     />
-//                                 </motion.div>
-//                             )}
-
-//                             {/* CREATE */}
-//                             {view === "create" && (
-//                                 <motion.div key="create" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-//                                     <CreateIssueForm onCreate={handleCreate} />
-//                                 </motion.div>
-//                             )}
-
-//                             {/* RESOLVED */}
-//                             {view === "resolved" && (
-//                                 <motion.div key="resolved" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-//                                 <div className="space-y-6">
-//                                     <h2 className="text-3xl font-bold tracking-tight">Resolved Issues</h2>
-//                                     <p className="text-gray-500 dark:text-gray-400">History of completed tasks.</p>
-//                                     
-//                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-//                                         {allFiltered.filter((i) => i.status === "Resolved").length > 0 ? (
-//                                             allFiltered.filter((i) => i.status === "Resolved").map((issue) => (
-//                                                 <IssueCard key={issue.id} issue={issue} onOpen={() => setSelectedIssue(issue)} />
-//                                             ))
-//                                         ) : (
-//                                             <p className="col-span-full text-gray-500 text-center py-10">No resolved issues found.</p>
-//                                         )}
-//                                     </div>
-//                                 </div>
-//                                 </motion.div>
-//                             )}
-//                             </AnimatePresence>
-//                         </div>
-//                     </div>
-
-//                     <Footer />
-//                 </main>
-//             </div>
-
-//             <MobileBottomNav view={view} onNavigate={setView} isDarkMode={darkMode} />
-//             
-//             <AnimatePresence>
-//                 {selectedIssue && (
-//                     <IssueModal issue={selectedIssue} onClose={() => setSelectedIssue(null)} />
-//                 )}
-//             </AnimatePresence>
-//         </div>
-//     );
-// }
-
-// // --- The Root App Component with Router and Auth Logic ---
-// export default function App() {
-//     const [isLoggedIn, setIsLoggedIn] = useState(false);
-//     const [role, setRole] = useState("Guest");
-//     // 🔑 State for name
-//     const [userName, setUserName] = useState(null); 
-//     // 🔑 NEW STATE: To store the logged-in user's email
-//     const [userEmail, setUserEmail] = useState(null);
-//     const [view, setView] = useState("dashboard");
-//     const [issues, setIssues] = useState([]);
-//     const [query, setQuery] = useState("");
-//     const [selectedIssue, setSelectedIssue] = useState(null);
-//     const navigate = useNavigate(); 
-
-
-//     const handleLogout = () => {
-//     authApi.logout(); 
-//     setIsLoggedIn(false);
-//     setRole("Guest");
-//     // 🔑 CLEAR name and email on logout
-//     setUserName(null); 
-//     setUserEmail(null); 
-//     navigate('/login'); 
-//     };
-
-//     const [darkMode, setDarkMode] = useState(() => {
-//         if (typeof window !== "undefined") {
-//             return localStorage.getItem("theme") === "dark" || 
-//             (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-//         }
-//         return false;
-//     });
-
-//     // --- Dark Mode Logic (Keep as is) ---
-//     useEffect(() => {
-//         if (darkMode) {
-//             document.documentElement.classList.add("dark");
-//             localStorage.setItem("theme", "dark");
-//         } else {
-//             document.documentElement.classList.remove("dark");
-//             localStorage.setItem("theme", "light");
-//         }
-//     }, [darkMode]);
-
-//     // --- AUTH CHECK: Check for Token on Mount ---
-//     useEffect(() => {
-//         const token = localStorage.getItem('token');
-//         const userData = localStorage.getItem('user');
-//         
-//         if (token && userData) {
-//             setIsLoggedIn(true);
-//             const user = JSON.parse(userData);
-//             
-//             setRole(user.role || "Admin"); 
-//             setUserName(user.name); 
-//             // 🔑 UPDATED: Set the user's email from localStorage
-//             setUserEmail(user.email);
-//         } else {
-//             setIsLoggedIn(false);
-//             setRole("Guest");
-//             setUserName(null); 
-//             // 🔑 Clear email if no token
-//             setUserEmail(null); 
-//             // Automatically redirect to login if no token is found on the root path
-//             if (window.location.pathname === '/') {
-//                 navigate('/login');
-//             }
-//         }
-//     }, [navigate]);
-//     
-//     // --- Data Loading Logic (Keep as is) ---
-//     const fetchAllIssues = useCallback(async () => {
-//         if (!isLoggedIn) return;
-//         try {
-//             // Note: api.fetchIssues must be updated to include the Authorization header!
-//             const res = await api.fetchIssues(); 
-//             setIssues(res);
-//         } catch (err) {
-//             console.error("Failed to load issues:", err);
-//             // Handle 401 Unauthorized errors here (e.g., localStorage.clear(), navigate('/login'))
-//         }
-//     }, [isLoggedIn]);
-
-//     useEffect(() => {
-//         fetchAllIssues();
-//     }, [fetchAllIssues]);
-
-
-//     // --- CRUD Handlers (Keep as is, but ensure API uses token) ---
-//     const handleCreate = useCallback(async (payload) => {
-//         try {
-//             // Note: api.createIssue must be updated to include the Authorization header!
-//             const created = await api.createIssue(payload); 
-//             setIssues((s) => [created, ...s]);
-//             setView("dashboard"); 
-//         } catch (err) {
-//             console.error("Failed to create issue:", err);
-//             alert("Error creating issue.");
-//         }
-//     }, []);
-
-//     const handleUpdateStatus = useCallback(async (id, status) => {
-//         // if (role !== "Admin") return; 
-//         try {
-//             // Note: api.updateIssueStatus must be updated to include the Authorization header!
-//             await api.updateIssueStatus(id, status); 
-//             setIssues((s) => s.map((i) => (i.id === id ? { ...i, status } : i)));
-//         } catch (err) {
-//             console.error("Failed to update status:", err);
-//         }
-//     }, []);
-
-//     // --- Filter Logic (Keep as is) ---
-//     const getSearchedIssues = useCallback(() => {
-//         if (!query) return issues;
-//         return issues.filter((i) =>
-//             [i.title, i.description, i.location, i.category]
-//                 .join(" ")
-//                 .toLowerCase()
-//                 .includes(query.toLowerCase())
-//         );
-//     }, [query, issues]);
-
-//     const allFiltered = getSearchedIssues();
-
-//     // --- Render Logic ---
-//     if (!isLoggedIn) {
-//         // Display Login/Signup routes if not logged in
-//         return (
-//             <div className="h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-//                 <Routes>
-//                     <Route path="/signup" element={<Signup />} />
-//                     <Route path="/login" element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />} />
-//                     {/* Default redirect to login for any other unauthorized path */}
-//                     <Route path="*" element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />} /> 
-//                 </Routes>
-//             </div>
-//         );
-//     }
-//     
-//     // Display the main app structure if logged in
-//     return (
-//         <Routes>
-//             <Route path="/" element={
-//                 <AuthenticatedApp
-//                     role={role} setRole={setRole}
-//                     // 🔑 PASSING user name and email to AuthenticatedApp
-//                     userName={userName} 
-//                     userEmail={userEmail}
-//                     issues={issues} setIssues={setIssues}
-//                     query={query} setQuery={setQuery}
-//                     view={view} setView={setView}
-//                     darkMode={darkMode} setDarkMode={setDarkMode}
-//                     selectedIssue={selectedIssue} setSelectedIssue={setSelectedIssue}
-//                     handleCreate={handleCreate} handleUpdateStatus={handleUpdateStatus}
-//                     allFiltered={allFiltered}
-//                     handleLogout={handleLogout}
-//                 />
-//             } />
-//             {/* Catch any route that is not '/' and redirect */}
-//             <Route path="*" element={<Navigate to="/" replace />} /> 
-//         </Routes>
-//     );
-// }
 import React, { useState, useEffect, useCallback } from "react";
-import Sidebar from "./components/Sidebar";
-import Topbar from "./components/Topbar";
-import MobileBottomNav from "./components/MobileBottomNav";
-import Footer from "./components/Footer";
-import IssuesList from "./components/IssuesList";
-import CreateIssueForm from "./components/CreateIssueForm";
-import IssueModal from "./components/IssueModal";
-import IssueCard from "./components/IssueCard";
-import Dashboard from "./components/Dashboard";
-import Login from "./pages/Login"; 
-import Signup from "./pages/Signup"; 
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { api, authApi } from "./api/api";
 import { AnimatePresence, motion } from "framer-motion";
-import { api, authApi } from "./api/api"; 
-import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 
-// --- Define the Authenticated App Component ---
-function AuthenticatedApp({ role, setRole, issues, setIssues, query, setQuery, view, setView, darkMode, setDarkMode, selectedIssue, setSelectedIssue, handleCreate, handleUpdateStatus, allFiltered, handleLogout, userName, userEmail }) {
-    
-    return (
-        <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-300">
-            
-            <div className="hidden md:block h-full shrink-0">
-                {/* Sidebar already receives role, so it can hide the Create button */}
-                <Sidebar role={role} onNavigate={setView} selected={view} closeSidebar={() => {}} userName={userName} />
-            </div>
+// Components
+import MainLayout from "./components/MainLayout";
+import CreateIssueForm from "./components/CreateIssueForm";
 
-            <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-                <Topbar 
-                    userName={userName}
-                    userEmail={userEmail}
-                    onSearch={setQuery}
-                    onToggleTheme={() => setDarkMode(!darkMode)}
-                    isDark={darkMode}
-                    setRole={setRole} // For debugging/demo purposes
-                    onLogout={handleLogout} 
-                />
+// Pages
+import DashboardPage from "./pages/DashboardPage";
+import IssuesPage from "./pages/IssuesPage";
+import ResolvedIssuesPage from "./pages/ResolvedIssuesPage";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import UsersPage from "./pages/UsersPage";
+import ArchivedIssuesPage from "./pages/ArchivedIssuesPage";
+import ReportsPage from "./pages/ReportsPage"; // 🔑 Import
 
-                <main className="flex-1 overflow-y-auto flex flex-col scroll-smooth pb-24 md:pb-0">
-                    <div className="flex-1 p-4 md:p-8">
-                        <div className="max-w-7xl mx-auto w-full">
-                            <AnimatePresence mode="wait">
-                            
-                            {/* DASHBOARD */}
-                            {view === "dashboard" && (
-                                <motion.div key="dashboard" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-                                    <Dashboard issues={allFiltered} />
-                                    
-                                    <div className="mt-8 mb-6">
-                                        <h2 className="text-2xl font-bold tracking-tight">New Issues</h2>
-                                        <p className="text-gray-500 dark:text-gray-400">Issues that need to be reviewed.</p>
-                                    </div>
-                                    
-                                    <IssuesList 
-                                        issues={allFiltered.filter(i => i.status === "New")} 
-                                        onOpenIssue={setSelectedIssue} 
-                                        onUpdateStatus={handleUpdateStatus} 
-                                        userRole={role}
-                                    />
-                                </motion.div>
-                            )}
-
-                            {/* IN PROGRESS */}
-                            {view === "issues" && (
-                                <motion.div key="issues" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-                                    <div className="mb-6">
-                                        <h2 className="text-3xl font-bold tracking-tight">In Progress</h2>
-                                        <p className="text-gray-500 dark:text-gray-400">Issues currently being worked on.</p>
-                                    </div>
-                                    
-                                    <IssuesList 
-                                        issues={allFiltered.filter(i => i.status === "In Progress")} 
-                                        onOpenIssue={setSelectedIssue} 
-                                        onUpdateStatus={handleUpdateStatus} 
-                                        userRole={role}
-                                    />
-                                </motion.div>
-                            )}
-
-                            {/* CREATE (Only accessible if Sidebar/MobileNav allows it) */}
-                            {view === "create" && (
-                                <motion.div key="create" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-                                    <CreateIssueForm onCreate={handleCreate} />
-                                </motion.div>
-                            )}
-
-                            {/* RESOLVED */}
-                            {view === "resolved" && (
-                                <motion.div key="resolved" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-                                <div className="space-y-6">
-                                    <h2 className="text-3xl font-bold tracking-tight">Resolved Issues</h2>
-                                    <p className="text-gray-500 dark:text-gray-400">History of completed tasks.</p>
-                                    
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                        {allFiltered.filter((i) => i.status === "Resolved").length > 0 ? (
-                                            allFiltered.filter((i) => i.status === "Resolved").map((issue) => (
-                                                <IssueCard key={issue.id} issue={issue} onOpen={() => setSelectedIssue(issue)} />
-                                            ))
-                                        ) : (
-                                            <p className="col-span-full text-gray-500 text-center py-10">No resolved issues found.</p>
-                                        )}
-                                    </div>
-                                </div>
-                                </motion.div>
-                            )}
-                            </AnimatePresence>
-                        </div>
-                    </div>
-
-                    <Footer />
-                </main>
-            </div>
-
-            {/* 🔑 UPDATED: Passed 'role' so MobileNav can hide the Create button for Admins */}
-            <MobileBottomNav view={view} onNavigate={setView} isDarkMode={darkMode} role={role} />
-            
-            <AnimatePresence>
-                {selectedIssue && (
-                    <IssueModal issue={selectedIssue} onClose={() => setSelectedIssue(null)} />
-                )}
-            </AnimatePresence>
-        </div>
-    );
-}
-
-// --- The Root App Component with Router and Auth Logic ---
 export default function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [role, setRole] = useState("Guest");
-    const [userName, setUserName] = useState(null); 
+    const [userName, setUserName] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
-    const [view, setView] = useState("dashboard");
+    const [userRollNo, setUserRollNo] = useState(null); // 🔑 New State
+    // 🔑 Fix: Auth Check Loading State
+    const [isAuthChecking, setIsAuthChecking] = useState(true);
+
     const [issues, setIssues] = useState([]);
     const [query, setQuery] = useState("");
     const [selectedIssue, setSelectedIssue] = useState(null);
-    const navigate = useNavigate(); 
+    // 🔑 NEW: Date Range & Category State
+    const [dateRange, setDateRange] = useState({ start: "", end: "" });
+    const [selectedCategory, setSelectedCategory] = useState("All");
+    const navigate = useNavigate();
 
-
+    // --- Auth Logic ---
     const handleLogout = () => {
-        authApi.logout(); 
+        authApi.logout();
         setIsLoggedIn(false);
         setRole("Guest");
-        setUserName(null); 
-        setUserEmail(null); 
-        navigate('/login'); 
+        setUserName(null);
+        setUserEmail(null);
+        setUserRollNo(null);
+        navigate('/login');
     };
 
+    // --- Dark Mode Logic ---
     const [darkMode, setDarkMode] = useState(() => {
         if (typeof window !== "undefined") {
-            return localStorage.getItem("theme") === "dark" || 
-            (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+            return localStorage.getItem("theme") === "dark" ||
+                (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
         }
         return false;
     });
 
-    // --- Dark Mode Logic ---
     useEffect(() => {
         if (darkMode) {
             document.documentElement.classList.add("dark");
@@ -744,35 +64,36 @@ export default function App() {
         }
     }, [darkMode]);
 
-    // --- AUTH CHECK: Check for Token on Mount ---
+    // --- On Mount Check ---
     useEffect(() => {
         const token = localStorage.getItem('token');
         const userData = localStorage.getItem('user');
-        
+
         if (token && userData) {
             setIsLoggedIn(true);
             const user = JSON.parse(userData);
-            
-            setRole(user.role || "Admin"); 
-            setUserName(user.name); 
+            setRole(user.role || "Admin");
+            setUserName(user.name);
             setUserEmail(user.email);
+            setUserRollNo(user.rollNo);
         } else {
             setIsLoggedIn(false);
-            setRole("Guest");
-            setUserName(null); 
-            setUserEmail(null); 
-            
-            if (window.location.pathname === '/') {
+            // Only redirect if we are not already on auth pages
+            if (window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
                 navigate('/login');
             }
         }
+        // 🔑 Finished Check
+        setIsAuthChecking(false);
     }, [navigate]);
-    
-    // --- Data Loading Logic ---
+
+
+
+    // --- Data Loading ---
     const fetchAllIssues = useCallback(async () => {
         if (!isLoggedIn) return;
         try {
-            const res = await api.fetchIssues(); 
+            const res = await api.fetchIssues();
             setIssues(res);
         } catch (err) {
             console.error("Failed to load issues:", err);
@@ -783,22 +104,25 @@ export default function App() {
         fetchAllIssues();
     }, [fetchAllIssues]);
 
-
     // --- CRUD Handlers ---
     const handleCreate = useCallback(async (payload) => {
         try {
-            const created = await api.createIssue(payload); 
+            // 🔑 Attach Name and Roll No to the issue
+            const author = userRollNo ? `${userName} (${userRollNo})` : userName;
+            const finalPayload = { ...payload, created_by: author };
+
+            const created = await api.createIssue(finalPayload);
             setIssues((s) => [created, ...s]);
-            setView("dashboard"); 
+            navigate("/"); // Navigate to dashboard after creation
         } catch (err) {
             console.error("Failed to create issue:", err);
             alert("Error creating issue.");
         }
-    }, []);
+    }, [navigate]);
 
     const handleUpdateStatus = useCallback(async (id, status) => {
         try {
-            await api.updateIssueStatus(id, status); 
+            await api.updateIssueStatus(id, status);
             setIssues((s) => s.map((i) => (i.id === id ? { ...i, status } : i)));
         } catch (err) {
             console.error("Failed to update status:", err);
@@ -807,48 +131,134 @@ export default function App() {
 
     // --- Filter Logic ---
     const getSearchedIssues = useCallback(() => {
-        if (!query) return issues;
-        return issues.filter((i) =>
-            [i.title, i.description, i.location, i.category]
-                .join(" ")
-                .toLowerCase()
-                .includes(query.toLowerCase())
-        );
-    }, [query, issues]);
+        // 🔑 Filter out Archived issues from the global search/filter context
+        // This ensures they don't show up in Dashboard, Issues List, or Resolved view
+        let filtered = issues.filter(i => i.status !== 'Archived');
+
+        // 1. Text Search
+        if (query) {
+            filtered = filtered.filter((i) =>
+                [i.title, i.description, i.location, i.category]
+                    .join(" ")
+                    .toLowerCase()
+                    .includes(query.toLowerCase())
+            );
+        }
+
+        // 2. 🔑 Date Filter
+        if (dateRange.start) {
+            filtered = filtered.filter(i => new Date(i.created_at) >= new Date(dateRange.start));
+        }
+        if (dateRange.end) {
+            // Set end date to end of day to include the selected day
+            const endDate = new Date(dateRange.end);
+            endDate.setHours(23, 59, 59, 999);
+            filtered = filtered.filter(i => new Date(i.created_at) <= endDate);
+        }
+
+        // 3. 🔑 Category Filter
+        if (selectedCategory && selectedCategory !== "All") {
+            filtered = filtered.filter(i => i.category === selectedCategory);
+        }
+
+        return filtered;
+    }, [query, issues, dateRange, selectedCategory]);
 
     const allFiltered = getSearchedIssues();
 
-    // --- Render Logic ---
-    if (!isLoggedIn) {
+    // 🔑 PREVENT RENDER UNTIL AUTH CHECK IS DONE
+    if (isAuthChecking) {
         return (
-            <div className="h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-                <Routes>
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/login" element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />} />
-                    <Route path="*" element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />} /> 
-                </Routes>
+            <div className="flex h-screen w-full items-center justify-center bg-slate-50 dark:bg-slate-950">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-sm font-medium text-slate-500 animate-pulse">Loading Session...</p>
+                </div>
             </div>
         );
     }
-    
+
+    // --- Render ---
     return (
         <Routes>
-            <Route path="/" element={
-                <AuthenticatedApp
-                    role={role} setRole={setRole}
-                    userName={userName} 
-                    userEmail={userEmail}
-                    issues={issues} setIssues={setIssues}
-                    query={query} setQuery={setQuery}
-                    view={view} setView={setView}
-                    darkMode={darkMode} setDarkMode={setDarkMode}
-                    selectedIssue={selectedIssue} setSelectedIssue={setSelectedIssue}
-                    handleCreate={handleCreate} handleUpdateStatus={handleUpdateStatus}
-                    allFiltered={allFiltered}
-                    handleLogout={handleLogout}
-                />
-            } />
-            <Route path="*" element={<Navigate to="/" replace />} /> 
+            <Route path="/login" element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />} />
+            <Route path="/signup" element={<Signup />} />
+
+            {/* Protected Routes */}
+            {isLoggedIn ? (
+                <Route
+                    element={
+                        <MainLayout
+                            role={role}
+                            setRole={setRole}
+                            darkMode={darkMode}
+                            setDarkMode={setDarkMode}
+                            userName={userName}
+                            userEmail={userEmail}
+                            handleLogout={handleLogout}
+                            selectedIssue={selectedIssue}
+                            setSelectedIssue={setSelectedIssue}
+                            onSearch={setQuery}
+                            // 🔑 Pass Filter Props
+                            dateRange={dateRange}
+                            setDateRange={setDateRange}
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
+                            onUpdateStatus={handleUpdateStatus}
+                        />
+                    }
+                >
+                    <Route index element={
+                        <DashboardPage
+                            allFiltered={allFiltered}
+                            setSelectedIssue={setSelectedIssue}
+                            handleUpdateStatus={handleUpdateStatus}
+                            role={role}
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
+                        />
+                    } />
+                    <Route path="issues" element={
+                        <IssuesPage
+                            allFiltered={allFiltered}
+                            setSelectedIssue={setSelectedIssue}
+                            handleUpdateStatus={handleUpdateStatus}
+                            role={role}
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
+                        />
+                    } />
+                    <Route path="resolved" element={
+                        <ResolvedIssuesPage
+                            allFiltered={allFiltered}
+                            setSelectedIssue={setSelectedIssue}
+                        />
+                    } />
+                    <Route path="create" element={
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <CreateIssueForm onCreate={handleCreate} />
+                        </motion.div>
+                    } />
+
+                    {/* 🔑 ADMIN ROUTES */}
+                    <Route path="users" element={<UsersPage role={role} />} />
+                    <Route path="archives" element={
+                        <ArchivedIssuesPage
+                            allFiltered={issues} // Pass raw issues, waiting for filter
+                            setSelectedIssue={setSelectedIssue}
+                            role={role}
+                        />
+                    } />
+                    <Route path="reports" element={<ReportsPage issues={issues} />} />  {/* 🔑 New Route */}
+                </Route>
+            ) : (
+                <Route path="*" element={<Navigate to="/login" replace />} />
+            )}
         </Routes>
     );
 }

@@ -1,38 +1,40 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { User, Shield } from 'lucide-react'; 
+import { Shield, User } from 'lucide-react';
 
-// 🔑 ACCEPT titleOverride and subtitleOverride
 export default function AuthLayout({ children, formType, titleOverride, subtitleOverride }) {
-    
-    // Fallback logic remains, but overrides are prioritized
-    const defaultTitle = formType === 'login' ? 'CampusTracker' : 'Create Account';
-    const defaultSubtitle = formType === 'login' 
-        ? 'Sign in to access the Campus Issue Tracker.'
-        : 'Register to start logging new issues.';
-    
-    // 🔑 Use overrides if provided
+
+    // Fallback logic
+    const defaultTitle = formType === 'login' ? 'Welcome Back' : 'Create Account';
+    const defaultSubtitle = formType === 'login'
+        ? 'Sign in to access your dashboard'
+        : 'Register to start logging issues';
+
     const title = titleOverride || defaultTitle;
     const subtitle = subtitleOverride || defaultSubtitle;
-    
-    // Choose the icon based on the form type
     const Icon = formType === 'login' ? Shield : User;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-gray-950 p-4">
-            <motion.div 
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.6, type: 'spring', damping: 15, stiffness: 100 }}
-                className="w-full max-w-md bg-white dark:bg-slate-800 shadow-2xl rounded-2xl p-8 space-y-8 transition-colors duration-500"
+        <div className="min-h-screen flex items-center justify-center bg-surface-50 dark:bg-surface-950 p-4 relative overflow-hidden font-sans">
+
+            {/* AMBIENT BACKGROUNDS */}
+            <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-primary-500/10 blur-[100px] animate-float" />
+            <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-violet-600/10 blur-[100px] animate-float" style={{ animationDelay: '1.5s' }} />
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.98, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="w-full max-w-lg glass-panel p-8 md:p-10 relative z-10"
             >
-                <div className="text-center space-y-2">
-                    {/* Icon for visual context */}
-                    <Icon className="w-12 h-12 text-indigo-600 dark:text-indigo-400 mx-auto" />
-                    <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">{title}</h1>
-                    <p className="text-lg text-gray-500 dark:text-gray-400 font-light">{subtitle}</p>
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 mb-6 shadow-sm">
+                        <Icon className="w-7 h-7" />
+                    </div>
+                    <h1 className="text-3xl font-display font-bold text-surface-900 dark:text-white mb-2">{title}</h1>
+                    <p className="text-surface-500 dark:text-surface-400">{subtitle}</p>
                 </div>
-                
+
                 {children}
 
             </motion.div>
