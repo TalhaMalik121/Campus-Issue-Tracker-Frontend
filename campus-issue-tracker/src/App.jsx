@@ -232,6 +232,8 @@ export default function App() {
                         <ResolvedIssuesPage
                             allFiltered={allFiltered}
                             setSelectedIssue={setSelectedIssue}
+                            role={role}
+                            onUpdateStatus={handleUpdateStatus}
                         />
                     } />
                     <Route path="create" element={
